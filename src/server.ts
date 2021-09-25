@@ -1,9 +1,12 @@
-import { performAstCodegen } from "./utils/codegen";
-import { ApolloServer } from "apollo-server-express";
 import { schema } from "./graphql/schema";
+import { PrismaClient } from "@prisma/client";
+import { performAstCodegen } from "./utils/codegen";
+import { applyMiddleware } from "graphql-middleware";
 import express, { Express, Request, Response } from "express";
+import { ApolloServer, ExpressContext } from "apollo-server-express";
 
-import { Context } from "./context";
+import { AuthUtils } from "./utils/authUtils";
+import { rules } from "./graphql/permissions";
 
 export class Server {
     app: Express;
@@ -11,11 +14,15 @@ export class Server {
     port: number;
     host: string;
 
+    prisma: PrismaClient;
+
     constructor(name: string, port: number, host?: string) {
         this.app = express();
         this.port = port;
         this.host = host ?? "http://localhost";
         this.name = name;
+
+        this.prisma = new PrismaClient();
     }
 
     start = async (): Promise<void> => {
@@ -26,14 +33,15 @@ export class Server {
         });
 
         try {
-            const context = new Context(schema);
-            const server = new ApolloServer({
-                schema: schema,
-                context: context,
+            const server = new ApolloServer<ExpressContext>({
+                schema: applyMiddleware(schema, rules),
+                context: ({ req }) => {
+                    const user = AuthUtils.handleAuth(req);
+                    return { user };
+                },
                 introspection: true,
             });
             await server.start();
-
             server.applyMiddleware({ app: this.app, path: "/graphql" });
         } catch (error) {
             console.error(error);

@@ -5,14 +5,12 @@ import { codegen } from "@graphql-codegen/core";
 import { Types } from "@graphql-codegen/plugin-helpers";
 import * as schemaAstPlugin from "@graphql-codegen/schema-ast";
 
-import { Context } from "../context";
 import { schema } from "../graphql/schema";
 
 export async function performAstCodegen(): Promise<void> {
     const options: Types.GenerateOptions = {
         config: {
             numericEnums: true,
-            contextType: Context,
             useIndexSignature: true,
         },
         documents: [],
@@ -23,7 +21,7 @@ export async function performAstCodegen(): Promise<void> {
             "schema-ast": schemaAstPlugin,
         },
     };
-
+    // performCodegen(options);
     const output = await codegen(options);
     fs.writeFile(path.join(__dirname, "../graphql/generated/", options.filename), output, (error) => {
         if (error) {

@@ -1,29 +1,29 @@
+import { app } from "../app";
 import { User } from "@prisma/client";
-import { Context } from "../context";
 
-export const filterUsers = async (): Promise<User[]> => {
-    const users = await Context.prisma.user.findMany();
-    return users;
-};
+import { IContext } from "../interfaces/Context";
+import { IResponse } from "../interfaces/Response";
+import { GraphQLInput } from "../interfaces/GraphQLInput";
+import { createErrorResponse, createResponse } from "../utils/responseUtils";
 
-export const getAllUsers = async (): Promise<User[]> => {
-    const users = await Context.prisma.user.findMany();
-    return users;
-};
+import { ICreateUserMutationInput } from "../graphql/typedefs/inputs/CreateUserInput";
 
-export const getUserById = async (id: number): Promise<User | null> => {
-    return Context.prisma.user.findUnique({
-        where: {
-            id,
-        },
-    });
-};
+export class UserController {
+    static getAllUsersQueryResolver = async (_context: IContext, _args?: GraphQLInput<null>): Promise<IResponse<User[]>> => {
+        try {
+            const users = await app.prisma.user.findMany();
+            return createResponse<User[]>(users);
+        } catch (error) {
+            return createErrorResponse<User[]>(error);
+        }
+    };
 
-export const createUser = async (name: string): Promise<User> => {
-    const user = await Context.prisma.user.create({
-        data: {
-            name,
-        },
-    });
-    return user;
-};
+    static createUserMutationResolver = async (_context: IContext, _args?: GraphQLInput<ICreateUserMutationInput>): Promise<IResponse<User[]>> => {
+        try {
+            const users = await app.prisma.user.findMany();
+            return createResponse<User[]>(users);
+        } catch (error) {
+            return createErrorResponse<User[]>(error);
+        }
+    };
+}

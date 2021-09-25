@@ -1,5 +1,17 @@
+"""Events microservice"""
+schema {
+  query: Query
+  mutation: Mutation
+}
+
 type Query {
-  users: [User]
+  users(pagination: PaginationInput): PagedUsers
+}
+
+type PagedUsers {
+  data: [User]
+  index: Int
+  status: EventsResponseStatus!
 }
 
 type User {
@@ -7,8 +19,23 @@ type User {
   name: String!
 }
 
+type EventsResponseStatus {
+  success: Boolean!
+  reason: String
+}
+
+input PaginationInput {
+  index: Int
+  limit: Int!
+}
+
 type Mutation {
-  createUser(input: CreateUserInput): User
+  createUser(input: CreateUserInput): CreateUser
+}
+
+type CreateUser {
+  data: User
+  status: EventsResponseStatus!
 }
 
 input CreateUserInput {

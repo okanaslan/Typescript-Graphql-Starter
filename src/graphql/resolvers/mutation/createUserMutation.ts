@@ -1,22 +1,23 @@
-import { GraphQLFieldConfig, GraphQLFieldResolver } from "graphql";
 import { User } from "@prisma/client";
+import { GraphQLFieldConfig } from "graphql";
 
-import { Context } from "../../../context";
+import { IContext } from "../../../interfaces/Context";
+import { IResponse } from "../../../interfaces/Response";
+import { GraphQLInput } from "../../../interfaces/GraphQLInput";
 
-import { createUser } from "../../../controllers/userController";
 import { UserType } from "../../typedefs/UserType";
-import { CreateUserInput } from "../../typedefs/inputs/CreateUserInput";
+import { UserController } from "../../../controllers/userController";
+import { CreateUserMutationInput, ICreateUserMutationInput } from "../../typedefs/inputs/CreateUserInput";
+import { createGraphQLResponse } from "../../../utils/responseUtils";
 
-export const createUserMutationResolver: GraphQLFieldResolver<unknown, Context> = async (_source, { input: { name } }): Promise<User> => {
-    return createUser(name);
-};
-
-export const createUserMutation: GraphQLFieldConfig<unknown, Context> = {
-    type: UserType,
+export const createUserMutation: GraphQLFieldConfig<unknown, IContext, GraphQLInput<ICreateUserMutationInput>> = {
+    type: createGraphQLResponse(UserType, "CreateUser"),
     args: {
         input: {
-            type: CreateUserInput,
+            type: CreateUserMutationInput,
         },
     },
-    resolve: createUserMutationResolver,
+    resolve: async (_source, args, context, _info): Promise<IResponse<User[]>> => {
+        return UserController.createUserMutationResolver(context, args);
+    },
 };

@@ -1,20 +1,20 @@
 import { GraphQLResolverMap } from "apollo-graphql";
 
-import { Context } from "../../context";
+import { IContext } from "../../interfaces/Context";
 
-import { getAllUsersQueryResolver } from "./query/getAllUsersQuery";
+import { getAllUsersQuery } from "./query/getAllUsersQuery";
 
-import { createUserMutationResolver } from "./mutation/createUserMutation";
+import { createUserMutation } from "./mutation/createUserMutation";
 
-export const resolvers: GraphQLResolverMap<Context> = {
+export const resolvers: GraphQLResolverMap<IContext> = {
     Query: {
         users: {
-            resolve: getAllUsersQueryResolver,
+            resolve: getAllUsersQuery.resolve!,
         },
     },
     Mutation: {
         createUser: {
-            resolve: createUserMutationResolver,
+            resolve: createUserMutation.resolve!,
         },
     },
 };
