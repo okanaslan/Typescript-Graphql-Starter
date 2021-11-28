@@ -1,4 +1,4 @@
-import { IPaginationInput } from "../graphql/typedefs/inputs/PaginationInput";
+import { IPaginationInput } from "./PaginationInput";
 
 export interface GraphQLInput<InputType = undefined, FilterType = undefined, PaginationType = IPaginationInput> {
     pagination?: PaginationType;

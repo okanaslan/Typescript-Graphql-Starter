@@ -5,13 +5,17 @@ schema {
 }
 
 type Query {
-  users(pagination: PaginationInput): PagedUsers
+  users(pagination: Pagination, filter: GetUsersMutationInput): GetUsersQueryResponse
 }
 
-type PagedUsers {
-  data: [User]
+type GetUsersQueryResponse {
+  data: users
   index: Int
   status: EventsResponseStatus!
+}
+
+type users {
+  users: [User]
 }
 
 type User {
@@ -24,20 +28,28 @@ type EventsResponseStatus {
   reason: String
 }
 
-input PaginationInput {
-  index: Int
+input Pagination {
+  index: Int!
   limit: Int!
 }
 
-type Mutation {
-  createUser(input: CreateUserInput): CreateUser
+input GetUsersMutationInput {
+  name: String!
 }
 
-type CreateUser {
-  data: User
+type Mutation {
+  createUser(input: CreateUserMutationInput): CreateUserMutationResponse
+}
+
+type CreateUserMutationResponse {
+  data: CreateUser
   status: EventsResponseStatus!
 }
 
-input CreateUserInput {
+type CreateUser {
+  user: User
+}
+
+input CreateUserMutationInput {
   name: String!
 }

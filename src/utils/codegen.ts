@@ -27,6 +27,5 @@ export async function performAstCodegen(): Promise<void> {
         if (error) {
             console.error(error);
         }
-        console.log("Outputs generated!");
     });
 }

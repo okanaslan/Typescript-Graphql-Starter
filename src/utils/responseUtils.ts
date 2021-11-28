@@ -1,6 +1,6 @@
 import { GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLOutputType } from "graphql";
 
-import { ResponseStatusType } from "../graphql/typedefs/ResponseStatusType";
+import { ResponseStatusType } from "../graphql/types/ResponseStatusType";
 import { IResponse } from "../interfaces/Response";
 
 export function createResponse<DataType>(data?: DataType, index?: number, error?: Error): IResponse<DataType> {
@@ -27,7 +27,7 @@ export function createGraphQLResponse(type: GraphQLOutputType, name: string): Gr
         name: name,
         fields: {
             data: { type: type },
-            status: { type: GraphQLNonNull(ResponseStatusType) },
+            status: { type: new GraphQLNonNull(ResponseStatusType) },
         },
     });
 }
@@ -38,7 +38,7 @@ export function createGraphQLPagedResponse(type: GraphQLOutputType, name: string
         fields: {
             data: { type: type },
             index: { type: GraphQLInt },
-            status: { type: GraphQLNonNull(ResponseStatusType) },
+            status: { type: new GraphQLNonNull(ResponseStatusType) },
         },
     });
 }

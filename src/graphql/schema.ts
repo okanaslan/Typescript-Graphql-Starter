@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLObjectType, GraphQLSchema, printSchema } from "graphql";
 
-import { resolvers } from "./resolvers/resolvers";
+import { resolvers } from "./resolvers";
 
 import { getAllUsersQuery } from "./resolvers/query/getAllUsersQuery";
 
